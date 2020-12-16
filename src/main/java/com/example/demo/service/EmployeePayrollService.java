@@ -16,8 +16,9 @@ public class EmployeePayrollService {
 	@Autowired
 	private EmployeePayrollRepository empPayrollRepo;
 	
-	public EmployeePayrollDto CreateUser(EmployeePayrollDto empPayrollDto) {
-		EmployeePayroll empPayroll = new EmployeePayroll(empPayrollDto.getName(), empPayrollDto.getSalary());
+	public EmployeePayrollDto CreateUser(EmployeePayrollDto employeePayrollDto) {
+		EmployeePayroll empPayroll = new EmployeePayroll(employeePayrollDto.getName(), employeePayrollDto.getGender(),
+				employeePayrollDto.getDepartment(), employeePayrollDto.getSalary(), employeePayrollDto.getStartDate(), employeePayrollDto.getNotes());
 		return new EmployeePayrollDto(empPayrollRepo.save(empPayroll));
 	}
 	
