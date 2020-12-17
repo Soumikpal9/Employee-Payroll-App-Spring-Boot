@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.EmployeePayroll;
 import com.example.demo.dto.EmployeePayrollDto;
+import com.example.demo.exceptions.EmployeePayrollException;
 import com.example.demo.repository.EmployeePayrollRepository;
 
 @Service
@@ -18,7 +19,8 @@ public class EmployeePayrollService {
 	
 	public EmployeePayrollDto CreateUser(EmployeePayrollDto employeePayrollDto) {
 		EmployeePayroll empPayroll = new EmployeePayroll(employeePayrollDto.getName(), employeePayrollDto.getGender(),
-				employeePayrollDto.getDepartment(), employeePayrollDto.getSalary(), employeePayrollDto.getStartDate(), employeePayrollDto.getNotes());
+				employeePayrollDto.getDepartment(), employeePayrollDto.getSalary(), employeePayrollDto.getStart_date(),
+				employeePayrollDto.getProfile_pic(), employeePayrollDto.getNotes());
 		return new EmployeePayrollDto(empPayrollRepo.save(empPayroll));
 	}
 	
@@ -44,4 +46,14 @@ public class EmployeePayrollService {
                 .map(employeePayroll -> new EmployeePayrollDto(employeePayroll))
                 .collect(Collectors.toList());
     }
+
+	public EmployeePayrollDto getUserById(Long id) {
+		return empPayrollRepo.findById(id).map(employeePayroll -> {
+			return new EmployeePayrollDto(employeePayroll);
+		}).orElseThrow(() -> new EmployeePayrollException("Employee not present"));
+	}
+	
+	public List<EmployeePayrollDto> getEmployeesByDepartment(String department){
+		return empPayrollRepo.findEmployeesByDepartment(department);
+	}
 }

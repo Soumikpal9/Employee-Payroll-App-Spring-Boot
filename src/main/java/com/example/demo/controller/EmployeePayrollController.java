@@ -18,14 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.EmployeePayrollDto;
 import com.example.demo.service.EmployeePayrollService;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @RestController
+@Slf4j
 public class EmployeePayrollController {
 	@Autowired
 	EmployeePayrollService employeePayrollService;
 	
 	@PostMapping("/post")
     public ResponseEntity<EmployeePayrollDto> createUser(@Valid @RequestBody EmployeePayrollDto user){
+		log.debug("Employee DTO : " + user.toString());
 		return ResponseEntity.status(HttpStatus.CREATED).body(employeePayrollService.CreateUser(user));
     }
 	
@@ -33,6 +37,16 @@ public class EmployeePayrollController {
     public ResponseEntity<List<EmployeePayrollDto>> getAllUser(){
 		return ResponseEntity.status(HttpStatus.OK).body(employeePayrollService.getAllUser());
     }
+	
+	@GetMapping("/get/{id}")
+	public ResponseEntity<EmployeePayrollDto> getUserById(@PathVariable("id") Long id){
+		return ResponseEntity.status(HttpStatus.OK).body(employeePayrollService.getUserById(id));
+	}
+	
+	@GetMapping("/department/{department}")
+	public ResponseEntity<List<EmployeePayrollDto>> getUserByDepartment(@PathVariable("department") String department){
+		return ResponseEntity.status(HttpStatus.OK).body(employeePayrollService.getEmployeesByDepartment(department));
+	}
 	
 	@PutMapping("/update")
     public ResponseEntity<EmployeePayrollDto> updateUser(@Valid @RequestBody EmployeePayrollDto user){
@@ -43,4 +57,5 @@ public class EmployeePayrollController {
     public ResponseEntity<EmployeePayrollDto> deleteUser(@PathVariable("id")Long id){
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeePayrollService.deleteUser(id));
     }
+	
 }

@@ -1,12 +1,17 @@
 package com.example.demo.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 
 import com.example.demo.domain.EmployeePayroll;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -17,20 +22,28 @@ public class EmployeePayrollDto {
 	@Pattern(regexp = "^[A-Z]{1}[a-zA-Z\\s]{2,}$", message = "Employee name Invalid")
 	private String name;
 	
-	@NotEmpty(message = "Gender can't be empty")
+	@Pattern(regexp = "M|F", message = "Gender needs to be male or female")
 	private String gender;
 	
-	@NotEmpty(message = "Department can't be empty")
-	private String[] department;
+	@NotNull(message="Departments should not be empty")
+	private List<String> department;
 	
-	@NotEmpty(message = "Salary can't be empty")
 	@Min(value = 500, message = "Min Wage should be more than 500")
 	private Double salary;
 	
-	@NotEmpty(message = "Start Date can't be empty")
-	private String startDate;
+	@JsonFormat(pattern="dd MMM yyyy")
+	@NotNull(message="Start Date should not be empty")
+	@PastOrPresent(message="Start Date should be past or todays date")
+	private LocalDate start_date;
+	
+	@NotBlank(message="Profile Picture cannot be empty")
+	private String profile_pic;
 	
 	private String notes;
+	
+	public EmployeePayrollDto() { 
+		
+	}
 
 	public EmployeePayrollDto(EmployeePayroll employee) {
 		this.id = employee.getId();
@@ -38,7 +51,8 @@ public class EmployeePayrollDto {
 		this.gender = employee.getGender();
 		this.department = employee.getDepartment();
 		this.salary = employee.getSalary();
-		this.startDate = employee.getStartDate();
+		this.start_date = employee.getStart_date();
+		this.profile_pic = employee.getProfile_pic();
 		this.notes = employee.getNotes();
 	}
 }
